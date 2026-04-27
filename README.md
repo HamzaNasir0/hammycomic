@@ -1,28 +1,57 @@
 # KeyComics
 
-A lightweight browser-based viewer for comic book collection data exported from [Key Collector Comics](https://www.keycollectorcomics.com/).
+A lightweight browser-based viewer for comic book collection data exported from Key Collector Comics.
 
 ## What it does
 
 Load a JSON file of your comic series and browse your collection with a clean, fast interface. No server required — everything runs locally in your browser.
 
 **Features:**
-- Upload your own `comics_data.json` or drag and drop it onto the page
-- Browse series from the sidebar and view all issues in grid or list view
-- Filter by key issues or issues with variants
-- Sort by price (high/low) or title
-- Search across issue titles, key notes, and tags
-- Click any issue to open a detail modal with pricing, key notes, tags, and variant covers
+
+* Upload your own `comics_data.json` or drag and drop it onto the page
+* Browse series from the sidebar and view all issues in grid or list view
+* Filter by key issues or issues with variants
+* Sort by price (high/low) or title
+* Search across issue titles, key notes, and tags
+* Click any issue to open a detail modal with pricing, key notes, tags, and variant covers
+
+---
 
 ## Getting started
 
+### Step 1: Download your JSON
+
+Go to:
+https://hammycomic.streamlit.app/
+
+Use the tool to generate and download your `comics_data.json`.
+
+### Step 2: Open the viewer
+
+Go to:
+https://hamzanasir0.github.io/hammycomic/
+
+### Step 3: Upload your JSON
+
+* Drag and drop your `comics_data.json` onto the page
+  **or**
+* Click upload and select your file
+
+---
+
+## Alternative (local setup)
+
 1. Clone or download the repo
 2. Open `index.html` in your browser (or serve with `npx serve .`)
-3. Drop in your `comics_data.json` — or hit **"continue with sample data"** to try it out
+3. Upload your `comics_data.json`
+
+---
 
 ## JSON format
 
-The app expects a JSON array of series objects. Each series contains issues, and each issue can contain variants. Example structure:
+The app expects a JSON array of series objects. Each series contains issues, and each issue can contain variants.
+
+Example structure:
 
 ```json
 [
@@ -55,13 +84,17 @@ The app expects a JSON array of series objects. Each series contains issues, and
 ]
 ```
 
+---
+
 ## Files
 
-| File | Description |
-|------|-------------|
-| `index.html` | Main app shell |
-| `styles.css` | All styling |
-| `app.js` | App logic — rendering, filtering, sorting, modals |
-| `data.js` | Sample data (`window.COMICS_DATA = [...]`) |
+| File         | Description                                       |
+| ------------ | ------------------------------------------------- |
+| `index.html` | Main app shell                                    |
+| `styles.css` | All styling                                       |
+| `app.js`     | App logic — rendering, filtering, sorting, modals |
+| `data.js`    | Sample data (`window.COMICS_DATA = [...]`)        |
+
+---
 
 ## Made by Hammy
