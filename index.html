@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Key Collector — Comics Viewer</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .site-footer {
+        text-align: center;
+        padding: 1rem;
+        font-family: var(--font-cond, "Barlow Condensed", sans-serif);
+        font-size: 12px;
+        color: var(--muted, #666);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-top: 1px solid var(--panel2, #222);
+        margin-top: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── UPLOAD SCREEN ── -->
+    <div id="uploadScreen" class="visible">
+      <div class="upload-card">
+        <div class="upload-logo">KEY<span>COMICS</span></div>
+        <div class="upload-tagline">Comics Data Viewer</div>
+        <div class="drop-zone" id="dropZone">
+          <input type="file" id="fileInputDrop" accept=".json" />
+          <span class="drop-icon">◈</span>
+          <div class="drop-label">Drop your comics_data.json here</div>
+          <div class="drop-sub">or <strong>click to browse</strong></div>
+        </div>
+        <div class="upload-error" id="uploadError"></div>
+        <button class="demo-link" onclick="loadDemo()">
+          or continue with sample data →
+        </button>
+      </div>
+    </div>
+
+    <!-- ── MAIN APP (hidden until data loaded) ── -->
+    <div id="app" style="display: none">
+      <header>
+        <div class="header-inner">
+          <div class="logo">KEY<span>COMICS</span></div>
+          <div class="search-bar">
+            <svg
+              width="14"
+              height="14"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            <input
+              type="text"
+              id="issueSearch"
+              placeholder="Search issues, notes, tags…"
+            />
+          </div>
+          <div class="header-stats">
+            <span class="stat-chip" id="headerStats">—</span>
+          </div>
+          <label class="upload-btn" title="Load a new comics_data.json">
+            <svg
+              width="13"
+              height="13"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            LOAD JSON
+            <input type="file" id="fileInputHeader" accept=".json" />
+          </label>
+        </div>
+      </header>
+
+      <div class="container">
+        <aside class="sidebar">
+          <div class="panel">
+            <div class="panel-title">SERIES</div>
+            <div class="series-list" id="seriesList"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">FILTERS</div>
+            <div class="filter-row">
+              <span class="filter-label">Sort by</span>
+              <select id="sortSelect">
+                <option value="default">Default order</option>
+                <option value="price-high">Price (high → low)</option>
+                <option value="price-low">Price (low → high)</option>
+                <option value="title">Title A → Z</option>
+              </select>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">
+                <svg
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                  />
+                </svg>
+                Key issues only
+              </span>
+              <div
+                class="toggle"
+                id="keyToggle"
+                onclick="toggleKeyFilter()"
+              ></div>
+            </div>
+            <div class="toggle-row">
+              <span class="toggle-label">
+                <svg
+                  width="14"
+                  height="14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <rect x="3" y="3" width="7" height="7" />
+                  <rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" />
+                  <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                Has variants
+              </span>
+              <div
+                class="toggle"
+                id="variantToggle"
+                onclick="toggleVariantFilter()"
+              ></div>
+            </div>
+          </div>
+        </aside>
+
+        <main class="main">
+          <div id="mainContent">
+            <div class="empty-state">
+              <span class="big-icon">◈</span>
+              <p>Select a series from the sidebar to view its issues</p>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <footer class="site-footer">Made by Hammy</footer>
+    </div>
+
+    <!-- ── MODAL ── -->
+    <div class="modal-backdrop" id="modalBackdrop" onclick="closeModal(event)">
+      <div class="modal" id="modal">
+        <button class="modal-close" onclick="closeModalDirect()">✕</button>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <!-- ── SCRIPTS ── -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
